@@ -49,9 +49,31 @@ exports.verifyOtp = async (req, res) => {
 };
 
 exports.saveUserInfo = async (req, res) => {
-  const { email, name } = req.body;
-  await User.create({ email, name });
-  res.json({ message: "User info saved" });
+  try {
+    const { name, email, phone, address, city, zipCode, dateOfBirth, occupation } = req.body;
+
+    console.log("Received Payload:", req.body);
+
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      address,
+      city,
+      zipCode,
+      dateOfBirth,
+      occupation,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "User info saved successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.error("Error saving user info:", error);
+    res.status(500).json({ success: false, message: "Server Error", error });
+  }
 };
 
 exports.getProfile = async (req, res) => {
